@@ -14,9 +14,13 @@ public class PlayerController : MonoBehaviour
     public Animator anim;
     public SpriteRenderer ren;
 
+    private void Start()
+    {
+        anim.SetBool("isGrounded", true);
+    }
+
     void Update()
     {
-
         Move();
         Jump();
 
@@ -24,6 +28,7 @@ public class PlayerController : MonoBehaviour
         {
             anim.SetBool("isWalking", false);
         }
+
     }
 
     void Move()
@@ -47,7 +52,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C) && gc.isGrounded == true)
         {
-            Debug.Log("ui");
+            anim.SetBool("isGrounded", false);
             rb.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
         }
     }
