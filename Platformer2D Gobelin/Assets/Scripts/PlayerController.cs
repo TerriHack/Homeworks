@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     public GroundCheck gc;
     public Animator anim;
     public PlayerData defaultData;
-    
+
     [Header("Input Related")]
     public InputActionAsset inputAsset;
     public PlayerInput playerInput;
@@ -22,12 +22,12 @@ public class PlayerController : MonoBehaviour
     private static readonly int IsGrounded = Animator.StringToHash("isGrounded");
     private Vector2 _playerPos;
     #endregion
-    
+
     private void Start()
     {
         _playerPos = rb.position;
         anim.SetBool(IsGrounded, true);
-        
+
         #region Input Related
         _jumpAction = playerInput.actions["Jump"];
         _jumpAction.Enable();
@@ -38,21 +38,39 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         bool jump = _jumpAction.ReadValue<float>() != 0;
-        if(jump) Jump();
+        if (jump) Jump();
 
         float _hMove = _horizontalMove.ReadValue<float>();
-        if (_hMove > 0) LeftToRight();
-        if (_hMove < 0) RightToLeft();
+        if (_hMove > 0)
+        {
+            LeftToRight();
+            anim.SetBool("isWalking", true);
+
+        }
+        if (_hMove < 0)
+        {
+            RightToLeft();
+            anim.SetBool("isWalking", true);
+        }
+
+        if (_hMove == 0)
+        {
+            anim.SetBool("isWalking", false);
+        }
     }
-    
+
     /// <summary>
     /// Applie a force to make the player jump et active l'animation state.
     /// </summary>
     private void Jump()
     {
-        if (gc.isGrounded != true) return;
-        anim.SetBool(IsGrounded, false);
-        rb.AddForce(Vector2.up * defaultData.jumpForce, ForceMode2D.Impulse);
+
+        if (gc.isGrounded == true)
+        {
+            Debug.Log("oui");
+            anim.SetBool(IsGrounded, false);
+            rb.AddForce(Vector2.up * defaultData.jumpForce, ForceMode2D.Impulse);
+        }
     }
 
     #region Horizontal Movement
@@ -62,17 +80,30 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void LeftToRight()
     {
-        rb.AddForce(new Vector2(_playerPos.x + defaultData.speed, _playerPos.y), ForceMode2D.Force);
+        if (gc.isGrounded == true)
+        {
+            rb.AddForce(new Vector2(_playerPos.x + defaultData.speed, _playerPos.y), ForceMode2D.Force);
+        }
+        else
+        {
+            rb.AddForce(new Vector2(_playerPos.x + defaultData.airState, _playerPos.y), ForceMode2D.Force);
+        }
     }
-    
+
     /// <summary>
     /// Applies a force to move the player right to left.
     /// </summary>
     private void RightToLeft()
     {
-        rb.AddForce(new Vector2(_playerPos.x - defaultData.speed, _playerPos.y), ForceMode2D.Force);
+        if (gc.isGrounded == true)
+        {
+            rb.AddForce(new Vector2(_playerPos.x - defaultData.speed, _playerPos.y), ForceMode2D.Force);
+
+        }
+        else
+        {
+            rb.AddForce(new Vector2(_playerPos.x - defaultData.airState, _playerPos.y), ForceMode2D.Force);
+        }
     }
     #endregion
-
-
 }

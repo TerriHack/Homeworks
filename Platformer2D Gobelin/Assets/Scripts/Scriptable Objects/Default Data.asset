@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Default Data
   m_EditorClassIdentifier: 
   dataName: 
-  jumpForce: 1
-  speed: 20
+  jumpForce: 0.7
+  speed: 5
+  airState: 3
   jumpBufferCountdown: 0
   coyoteTimeCountdown: 0

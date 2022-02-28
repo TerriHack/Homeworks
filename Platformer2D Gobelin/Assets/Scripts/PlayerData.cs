@@ -11,10 +11,11 @@ public class PlayerData : ScriptableObject
     
     [Header("Forces")]
     [Tooltip("The Jump Force cannot exceed 100")]
-    public int jumpForce;
+    public float jumpForce;
     [Tooltip("The Speed cannot exceed 100")]
-    public int speed;
-    
+    public float speed;
+    public float airState;
+
     [Header("Countdown")]
     public float jumpBufferCountdown;
     public float coyoteTimeCountdown;
